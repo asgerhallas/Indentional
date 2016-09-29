@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Indentional</id>
+    <version>$version$</version>
+    <title>Indentional</title>
+    <authors>Asger Hallas</authors>
+    <owners>Asger Hallas</owners>
+    <projectUrl>http://github.com/asgerhallas/Indentional</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>No more bleeding eyes...</description>
+    <copyright>Copyright 2016</copyright>
+  </metadata>
+</package>
