@@ -12,8 +12,7 @@ namespace Indentional.Tests
                 my first line
                 my second line");
 
-            Assert.Equal(@"my first line
-my second line", actual);
+            Assert.Equal("my first line\r\nmy second line", actual);
         }
 
         [Fact]
@@ -24,9 +23,7 @@ my second line", actual);
                 my first line
                 my second line");
 
-            Assert.Equal(@"
-my first line
-my second line", actual);
+            Assert.Equal("\r\nmy first line\r\nmy second line", actual);
         }
 
         [Fact]
@@ -37,9 +34,7 @@ my second line", actual);
                 my second line
                 my third line");
 
-            Assert.Equal(@"my first line
-my second line
-my third line", actual);
+            Assert.Equal("my first line\r\nmy second line\r\nmy third line", actual);
         }
 
         [Fact]
@@ -50,9 +45,7 @@ my third line", actual);
                     my second line
                 my third line");
 
-            Assert.Equal(@"my first line
-    my second line
-my third line", actual);
+            Assert.Equal("my first line\r\n    my second line\r\nmy third line", actual);
         }
 
         [Fact]
@@ -60,7 +53,7 @@ my third line", actual);
         {
             var actual = _(@"");
 
-            Assert.Equal(@"", actual);
+            Assert.Equal("", actual);
         }
 
         [Fact]
@@ -69,7 +62,7 @@ my third line", actual);
             var actual = _(@"
 ");
 
-            Assert.Equal(@"", actual);
+            Assert.Equal("", actual);
         }
 
         [Fact]
@@ -78,8 +71,7 @@ my third line", actual);
             var actual = _(@"hallo
 ");
 
-            Assert.Equal(@"hallo
-", actual);
+            Assert.Equal("hallo\r\n", actual);
         }
 
         [Fact]
@@ -93,12 +85,7 @@ my third line", actual);
                 
                 Don't ya think?");
 
-            Assert.Equal(@"You tried to do something tricky, but something was not true twice in i row.
-It might be better to do this:
-
-    DoDoingDone(checkForSomethingTrue: false);
-
-Don't ya think?", actual);
+            Assert.Equal("You tried to do something tricky, but something was not true twice in i row.\r\nIt might be better to do this:\r\n\r\n    DoDoingDone(checkForSomethingTrue: false);\r\n\r\nDon't ya think?", actual);
         }
     }
 }
