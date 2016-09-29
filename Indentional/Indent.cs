@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Indentional
 {
-    public static class Indentional
+    public static class Indent
     {
         public static string _(string s)
         {
@@ -46,7 +46,7 @@ namespace Indentional
             while ((line = reader.ReadLine()) != null)
             {
                 builder.AppendLine();
-                builder.Append(line.Remove(0, indent));
+                builder.Append(line.Remove(0, Math.Min(indent, line.Length)));
             } 
 
             return builder.ToString();

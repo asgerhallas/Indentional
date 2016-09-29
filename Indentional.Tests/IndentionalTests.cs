@@ -1,4 +1,5 @@
 ﻿using Xunit;
+using static Indentional.Indent;
 
 namespace Indentional.Tests
 {
@@ -7,7 +8,7 @@ namespace Indentional.Tests
         [Fact]
         public void RemovesCommonIndention()
         {
-            var actual = Indentional._(@"
+            var actual = _(@"
                 my first line
                 my second line");
 
@@ -18,7 +19,7 @@ my second line", actual);
         [Fact]
         public void CalculatesCommonIndentFromFirstLineWithText()
         {
-            var actual = Indentional._(@"
+            var actual = _(@"
 
                 my first line
                 my second line");
@@ -31,7 +32,7 @@ my second line", actual);
         [Fact]
         public void IfFirstLineHasNoIndentItCalculatesCommonIndentFromSecondLineWithText()
         {
-            var actual = Indentional._(
+            var actual = _(
               @"my first line
                 my second line
                 my third line");
@@ -44,7 +45,7 @@ my third line", actual);
         [Fact]
         public void KeepsFurtherIdentation()
         {
-            var actual = Indentional._(@"
+            var actual = _(@"
                 my first line
                     my second line
                 my third line");
@@ -57,7 +58,7 @@ my third line", actual);
         [Fact]
         public void HandlesEmptyString()
         {
-            var actual = Indentional._(@"");
+            var actual = _(@"");
 
             Assert.Equal(@"", actual);
         }
@@ -65,7 +66,7 @@ my third line", actual);
         [Fact]
         public void HandlesStringWithLineBreak()
         {
-            var actual = Indentional._(@"
+            var actual = _(@"
 ");
 
             Assert.Equal(@"", actual);
@@ -74,11 +75,30 @@ my third line", actual);
         [Fact]
         public void HandlesStringWithLineBreak2()
         {
-            var actual = Indentional._(@"hallo
+            var actual = _(@"hallo
 ");
 
             Assert.Equal(@"hallo
 ", actual);
+        }
+
+        [Fact]
+        public void TestReadme()
+        {
+            var actual = _(@"
+                You tried to do something tricky, but something was not true twice in i row.
+                It might be better to do this:
+
+                    DoDoingDone(checkForSomethingTrue: false);
+                
+                Don't ya think?");
+
+            Assert.Equal(@"You tried to do something tricky, but something was not true twice in i row.
+It might be better to do this:
+
+    DoDoingDone(checkForSomethingTrue: false);
+
+Don't ya think?", actual);
         }
     }
 }

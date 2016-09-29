@@ -1,52 +1,48 @@
-# ShinySwitch
+# Indentional
 
-You want to switch on type of an object instance or on assignability to an instance of System.Type?
-
-If you want to mutate some state, you can do it like this:
+Have you ever written a great error message for your library...
 
 ```C#
-Switch.On(@event) // matching on type of instance
-    .Match<RegistrationChanged>(registrationChanged =>
-        Switch.On(registrationChanged.TargetType) // matching on System.Type
-            .Match<Zone>(type => zone.Etag = Guid.NewGuid())
-            .Match<Boiler>(type => ApplyEtagsForChangedBoilers(@case, boiler))
-    .Match<StatusRegistered>(x => x.Zone.Etag = Guid.NewGuid())
-    .Match<ZoneUsagesConverted>(x => x.Zones.ForEach((z, i) => z.Etag = Guid.NewGuid()));
-	.OrThrow();
+public void DoDoingDone()
+{
+    if (SomethingIsTrue) 
+    { 
+        if (SomethignIsStillTrue)
+        {
+            throw new GreatException(@"You tried to do something tricky, but something was not true twice in i row.
+It might be better to do this:
+
+    DoDoingDone(checkForSomethingTrue: false);
+    
+Don't ya think?")
+        }
+    }
+}
 ```
 
-Or if you'd like to return a value, like this:
+... only to get sore eyes from the outdented multiline string?
+
+I know I have. But now I use Indentional just like this:
 
 ```C#
-var result = Switch<string>.On(@event) // matching on type of instance
-    .Match<RegistrationChanged>(registrationChanged =>
-        Switch<string>.On(registrationChanged.TargetType) // matching on System.Type
-            .Match<Zone>(type => type.Name + " was great!")
-            .Match<Boiler>(type => "Oh the boiler")
-    .Match<StatusRegistered>(x => "Registration of status")
-    .Match<ZoneUsagesConverted>(x => "Did I just do that?")
-	.OrThrow();
+using static Indentional.Indent;
+
+public void DoDoingDone()
+{
+    if (SomethingIsTrue) 
+    { 
+        if (SomethignIsStillTrue)
+        {
+            throw new GreatException(_(@"
+                You tried to do something tricky, but something was not true twice in i row.
+                It might be better to do this:
+                    
+                    DoDoingDone(checkForSomethingTrue: false);
+                
+                Don't ya think?"))
+        }
+    }
+}
 ```
 
-Match also takes a predicate for evaluation besides the type:
-
-```C#
-.Match<Zone>(x => x.IsLocal, x => "result");
-```
-
-And a methods that will run if there was a match:
-
-```C#
-.Then((result, x) => result + "appendix")
-```
-
-To return from the switch use one of these:
-
-```C#
-.Else(x => "something else") // will be run when there was no match and return
-
-.OrDefault() // will be run when there was no match and return default(TReturn)
-
-.OrThrow(new ArgumentOutOfRangeException()) // will be run when there was no match and throw
-```
-	
+No more bleeding eyes. Except when using preprocessor directives. But that's another story.
