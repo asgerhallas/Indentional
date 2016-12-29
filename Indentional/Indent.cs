@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using ShinySwitch;
 
 namespace Indentional
 {
@@ -8,48 +9,103 @@ namespace Indentional
     {
         public static string _(string s)
         {
-            if (s == null) return null;
+            var state = new ParserState(State.BeginText, 0, null);
+            var input = new StringReader(s);
+            var result = new StringBuilder();
 
-            var builder = new StringBuilder();
-            var reader = new StringReader(s);
-            var line = reader.ReadLine();
-
-            if (line == null) return s;
-
-            if (line.Trim().Length > 0)
+            while (state.State != State.EndText)
             {
-                builder.AppendLine(line);
+                state = Parse(state, input.ReadLine());
+                result.Append(state.Output);
             }
 
-            while ((line = reader.ReadLine()) != null)
-            {
-                if (line.Trim().Length == 0)
-                {
-                    builder.AppendLine();
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            if (line == null)
-            {
-                return builder.ToString();
-            }
-
-            var trimmed = line.TrimStart();
-            var indent = line.Length - trimmed.Length;
-
-            builder.Append(trimmed);
-
-            while ((line = reader.ReadLine()) != null)
-            {
-                builder.AppendLine();
-                builder.Append(line.Remove(0, Math.Min(indent, line.Length)));
-            } 
-
-            return builder.ToString();
+            return result.ToString();
         }
+
+        public static ParserState Parse(ParserState state, string line)
+        {
+            return ParseNull(state, line) ?? ParseLine(state, line);
+        }
+
+        private static ParserState ParseNull(ParserState state, string line)
+        {
+            return line == null ? state.Next(State.EndText) : null;
+        }
+
+        private static ParserState ParseLine(ParserState state, string line)
+        {
+            return IsLineBreak(line)
+                ? Switch<ParserState>.On(state.State)
+                    .Match(State.BeginText, _ => state.Next(State.BeginTextWithLineBreak))
+                    .Match(State.BeginTextWithLine, _ => state.Next(State.Block, $"{Environment.NewLine}{Environment.NewLine}"))
+                    .Match(State.BeginTextWithLineBreak, _ => state.Next(State.BeginTextWithLineBreak))
+                    .Match(State.Line, _ => state.Next(State.Block, $"{Environment.NewLine}{Environment.NewLine}"))
+                    .Match(State.Block, _ => state.Next(State.Block))
+                    .Else(() => state.Next(State.EndText))
+                : Switch<ParserState>.On(state.State)
+                    .Match(State.BeginText, _ => state.Next(State.BeginTextWithLine, line))
+                    .Match(State.BeginTextWithLine, _ =>
+                    {
+                        var indent = line.Length - line.TrimStart().Length;
+                        return state.Next(State.Line, indent, $" {IndentLine(indent, line)}");
+                    })
+                    .Match(State.BeginTextWithLineBreak, _ =>
+                    {
+                        var indent = line.Length - line.TrimStart().Length;
+                        return state.Next(State.Line, indent, $"{IndentLine(indent, line)}");
+                    })
+                    .Match(State.Line, _ => state.Next(State.Line, $" {IndentLine(state.Identation, line)}"))
+                    .Match(State.Block, _ => state.Next(State.Line, $"{IndentLine(state.Identation, line)}"))
+                    .Else(() => state.Next(State.EndText));
+        }
+
+        private static bool IsLineBreak(string line)
+        {
+            return line.Trim().Length == 0;
+        }
+
+        private static string IndentLine(int identation, string line)
+        {
+            return line.Remove(0, Math.Min(identation, line.Length));
+        }
+    }
+
+    public class ParserState
+    {
+        public ParserState(State state, int identation, string output)
+        {
+            State = state;
+            Identation = identation;
+            Output = output;
+        }
+
+        public State State { get; }
+        public int Identation { get; }
+        public string Output { get; }
+
+        public ParserState Next(State state)
+        {
+            return new ParserState(state, Identation, null);
+        }
+
+        public ParserState Next(State state, string value)
+        {
+            return new ParserState(state, Identation, value);
+        }
+
+        public ParserState Next(State state, int indentation, string value)
+        {
+            return new ParserState(state, indentation, value);
+        }
+    }
+
+    public enum State
+    {
+        BeginText,
+        BeginTextWithLine,
+        BeginTextWithLineBreak,
+        Line,
+        Block,
+        EndText
     }
 }
