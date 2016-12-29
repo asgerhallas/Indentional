@@ -22,17 +22,12 @@ namespace Indentional
             return result.ToString();
         }
 
-        public static ParserState Parse(ParserState state, string line)
+        static ParserState Parse(ParserState state, string line)
         {
-            return ParseNull(state, line) ?? ParseLine(state, line);
+            return line != null ? ParseLine(state, line) : state.Next(State.EndText);
         }
-
-        private static ParserState ParseNull(ParserState state, string line)
-        {
-            return line == null ? state.Next(State.EndText) : null;
-        }
-
-        private static ParserState ParseLine(ParserState state, string line)
+        
+        static ParserState ParseLine(ParserState state, string line)
         {
             return IsLineBreak(line)
                 ? Switch<ParserState>.On(state.State)
@@ -59,12 +54,12 @@ namespace Indentional
                     .Else(() => state.Next(State.EndText));
         }
 
-        private static bool IsLineBreak(string line)
+        static bool IsLineBreak(string line)
         {
             return line.Trim().Length == 0;
         }
 
-        private static string IndentLine(int identation, string line)
+        static string IndentLine(int identation, string line)
         {
             return line.Remove(0, Math.Min(identation, line.Length));
         }
