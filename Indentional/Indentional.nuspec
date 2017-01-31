@@ -11,4 +11,8 @@
     <description>No more bleeding eyes...</description>
     <copyright>Copyright 2016</copyright>
   </metadata>
+  <files>
+    <file src="Indentional.dll" target="lib\net45" />
+    <file src="Indentional.pdb" target="lib\net45" />
+  </files>
 </package>
