@@ -12,7 +12,7 @@
     <copyright>Copyright 2016</copyright>
   </metadata>
   <files>
-    <file src="Indentional.dll" target="lib\portable-win+net45+sl50+wp80" />
-    <file src="Indentional.pdb" target="lib\portable-win+net45+sl50+wp80" />
+    <file src="Indentional.dll" target="lib" />
+    <file src="Indentional.pdb" target="lib" />
   </files>
 </package>
