@@ -12,7 +12,7 @@
     <copyright>Copyright 2016</copyright>
   </metadata>
   <files>
-    <file src="Indentional.dll" target="lib" />
-    <file src="Indentional.pdb" target="lib" />
+    <file src="Indentional.dll" target="lib\netstandard1.1\Indentional.dll" />
+    <file src="Indentional.pdb" target="lib\netstandard1.1\Indentional.pdb" />
   </files>
 </package>
