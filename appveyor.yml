@@ -16,7 +16,7 @@ after_build:
 - cmd: >-
     nuget install ILMerge -ExcludeVersion
 
-    ILMerge\tools\ilmerge.exe /targetplatform:v4,C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /target:library /internalize /out:Indentional\Indentional.dll Indentional\bin\Release\Indentional.dll Indentional\bin\Release\ShinySwitch.dll
+    ILMerge\tools\ilmerge.exe /targetplatform:v4,C:\Windows\Microsoft.NET\Framework64\v4.0.30319 /target:library /internalize /out:Indentional\Indentional.dll Indentional\bin\Release\netstandard1.1\Indentional.dll Indentional\bin\Release\netstandard1.1\ShinySwitch.dll
 
     dotnet pack Indentional\Indentional.csproj /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
 artifacts:
