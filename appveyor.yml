@@ -16,7 +16,7 @@ after_build:
 - cmd: >-
     nuget install ILRepack -ExcludeVersion
 
-    ILRepack\tools\ilmerge.exe /internalize /out:Indentional\Indentional.dll Indentional\bin\Release\netstandard1.1\Indentional.dll Indentional\bin\Release\netstandard1.1\ShinySwitch.dll
+    ILRepack\tools\ilrepack.exe /internalize /out:Indentional\Indentional.dll Indentional\bin\Release\netstandard1.1\Indentional.dll Indentional\bin\Release\netstandard1.1\ShinySwitch.dll
 
     dotnet pack Indentional\Indentional.csproj /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
 artifacts:
