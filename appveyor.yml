@@ -14,6 +14,8 @@ build:
   verbosity: minimal
 after_build:
 - cmd: dotnet pack Indentional\Indentional.csproj /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
+test_script:
+- cmd: dotnet test Indentional.Tests2/Indentional.Tests2.csproj
 artifacts:
 - path: '*.nupkg'
 deploy:
