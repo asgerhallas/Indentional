@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ShinySwitch" Version="1.0.67" />
+    <PackageReference Include="ShinySwitch" Version="1.0.73" />
   </ItemGroup>
 
 </Project>
