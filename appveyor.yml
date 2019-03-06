@@ -1,7 +1,6 @@
 version: 1.0.{build}
 image: Visual Studio 2017
 configuration: Release
-platform: Any CPU
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -14,16 +13,9 @@ build:
   verbosity: minimal
 after_build:
 - cmd: dotnet pack Indentional\Indentional.csproj /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
-test_script:
-- cmd: dotnet test Indentional.Tests2/Indentional.Tests2.csproj
 artifacts:
 - path: '*/**/*.nupkg'
 deploy:
 - provider: NuGet
   api_key:
     secure: rTAOxhsBekNlEb9IN6Iyy5mayYbiTTIWidYKB4f1ZyRbwiIeqjFr0x6qDZQM6RYP
-
-
-# nuget install ILRepack -ExcludeVersion
-#
-# ILRepack\tools\ilrepack.exe /internalize /out:Indentional\Indentional.dll Indentional\bin\Release\netstandard1.1\Indentional.dll Indentional\bin\Release\netstandard1.1\ShinySwitch.dll
