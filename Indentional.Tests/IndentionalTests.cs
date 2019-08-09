@@ -88,6 +88,16 @@ namespace Indentional.Tests
         }
 
         [Fact]
+        public void TrimsEnds()
+        {
+            var actual = _(@"
+                my first line 
+                my second line ");
+
+            Assert.Equal("my first line my second line", actual);
+        }
+
+        [Fact]
         public void TestReadme()
         {
             var actual = _(@"

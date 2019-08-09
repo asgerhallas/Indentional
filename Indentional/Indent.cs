@@ -22,14 +22,11 @@ namespace Indentional
             return result.ToString();
         }
 
-        static ParserState Parse(ParserState state, string line)
-        {
-            return line != null ? ParseLine(state, line) : state.Next(State.EndText);
-        }
-        
-        static ParserState ParseLine(ParserState state, string line)
-        {
-            return IsLineBreak(line)
+        static ParserState Parse(ParserState state, string line) => 
+            line != null ? ParseLine(state, line.TrimEnd()) : state.Next(State.EndText);
+
+        static ParserState ParseLine(ParserState state, string line) =>
+            IsLineBreak(line)
                 ? Switch<ParserState>.On(state.State)
                     .Match(State.BeginText, _ => state.Next(State.BeginTextWithLineBreak))
                     .Match(State.BeginTextWithLine, _ => state.Next(State.Block, $"{Environment.NewLine}{Environment.NewLine}"))
@@ -52,55 +49,9 @@ namespace Indentional
                     .Match(State.Line, _ => state.Next(State.Line, $" {IndentLine(state.Identation, line)}"))
                     .Match(State.Block, _ => state.Next(State.Line, $"{IndentLine(state.Identation, line)}"))
                     .Else(() => state.Next(State.EndText));
-        }
 
-        static bool IsLineBreak(string line)
-        {
-            return line.Trim().Length == 0;
-        }
+        static bool IsLineBreak(string line) => line.Trim().Length == 0;
 
-        static string IndentLine(int identation, string line)
-        {
-            return line.Remove(0, Math.Min(identation, line.Length));
-        }
-    }
-
-    public class ParserState
-    {
-        public ParserState(State state, int identation, string output)
-        {
-            State = state;
-            Identation = identation;
-            Output = output;
-        }
-
-        public State State { get; }
-        public int Identation { get; }
-        public string Output { get; }
-
-        public ParserState Next(State state)
-        {
-            return new ParserState(state, Identation, null);
-        }
-
-        public ParserState Next(State state, string value)
-        {
-            return new ParserState(state, Identation, value);
-        }
-
-        public ParserState Next(State state, int indentation, string value)
-        {
-            return new ParserState(state, indentation, value);
-        }
-    }
-
-    public enum State
-    {
-        BeginText,
-        BeginTextWithLine,
-        BeginTextWithLineBreak,
-        Line,
-        Block,
-        EndText
+        static string IndentLine(int identation, string line) => line.Remove(0, Math.Min(identation, line.Length));
     }
 }
