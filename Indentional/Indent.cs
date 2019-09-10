@@ -5,9 +5,15 @@ using ShinySwitch;
 
 namespace Indentional
 {
-    public static class Indent
+    public static class Indentional
     {
-        public static string _(string s)
+        public static string _(string s) => Indent(s);
+
+        public static string _(string outputNewLine, string s) => Indent(outputNewLine, s);
+        
+        public static string Indent(string s) => _(Environment.NewLine, s);
+
+        public static string Indent(string outputNewLine, string s)
         {
             var state = new ParserState(State.BeginText, 0, null);
             var input = new StringReader(s);
@@ -19,7 +25,7 @@ namespace Indentional
                 result.Append(state.Output);
             }
 
-            return result.ToString();
+            return result.Replace(Environment.NewLine, outputNewLine).ToString();
         }
 
         static ParserState Parse(ParserState state, string line) => 

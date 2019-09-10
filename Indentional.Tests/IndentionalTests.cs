@@ -1,5 +1,5 @@
 using Xunit;
-using static Indentional.Indent;
+using static Indentional.Indentional;
 
 namespace Indentional.Tests
 {
@@ -117,6 +117,19 @@ namespace Indentional.Tests
             var actual = _("Der bør ikke oprettes energimærkningsrapporter, der indeholder mere end\r\n                      ca. 15 bygninger/zoner på en enkelt sag. Anbefalingen gives dels på baggrund af\r\n                      energimærkningsrapportens læsevenlighed, dels for at kunne sikre at Energy10 kører\r\n                      hurtigt og stabilt. Vi arbejder på at løse problemet med hastigheden på meget store sager.");
 
             Assert.Equal("Der bør ikke oprettes energimærkningsrapporter, der indeholder mere end ca. 15 bygninger/zoner på en enkelt sag. Anbefalingen gives dels på baggrund af energimærkningsrapportens læsevenlighed, dels for at kunne sikre at Energy10 kører hurtigt og stabilt. Vi arbejder på at løse problemet med hastigheden på meget store sager.", actual);
+        }
+
+        [Fact]
+        public void ReplaceOutputNewLine()
+        {
+            var actual = _("\n", @"
+                my first line
+
+                    my second line
+
+                my third line");
+
+            Assert.Equal("my first line\n\n    my second line\n\nmy third line", actual);
         }
     }
 }
