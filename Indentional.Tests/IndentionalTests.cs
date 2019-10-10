@@ -88,13 +88,13 @@ namespace Indentional.Tests
         }
 
         [Fact]
-        public void TrimsEnds()
+        public void TrimsEnds() // Except for last line, where you clearly can see the spaces
         {
             var actual = _(@"
-                my first line 
+                my first line    
                 my second line ");
 
-            Assert.Equal("my first line my second line", actual);
+            Assert.Equal("my first line my second line ", actual);
         }
 
         [Fact]
@@ -130,6 +130,14 @@ namespace Indentional.Tests
                 my third line");
 
             Assert.Equal("my first line\n\n    my second line\n\nmy third line", actual);
+        }
+
+        [Fact]
+        public void DontTrimOnliners()
+        {
+            var actual = _("Der bør ikke oprettes energimærkningsrapporter, der indeholder mere end ");
+
+            Assert.Equal("Der bør ikke oprettes energimærkningsrapporter, der indeholder mere end ", actual);
         }
     }
 }

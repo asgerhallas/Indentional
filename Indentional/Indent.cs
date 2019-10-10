@@ -21,15 +21,19 @@ namespace Indentional
 
             while (state.State != State.EndText)
             {
-                state = Parse(state, input.ReadLine());
+                state = Parse(state, input.ReadLine(), input.Peek() == -1);
                 result.Append(state.Output);
             }
 
             return result.Replace(Environment.NewLine, outputNewLine).ToString();
         }
 
-        static ParserState Parse(ParserState state, string line) => 
-            line != null ? ParseLine(state, line.TrimEnd()) : state.Next(State.EndText);
+        static ParserState Parse(ParserState state, string line, bool lastLine) => 
+            line != null 
+                ? lastLine
+                    ? ParseLine(state, line)
+                    : ParseLine(state, line.TrimEnd())
+                : state.Next(State.EndText);
 
         static ParserState ParseLine(ParserState state, string line) =>
             IsLineBreak(line)
