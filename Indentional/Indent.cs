@@ -16,14 +16,16 @@ namespace Indentional
             var state = new ParserState(State.BeginText, 0, ReadOnlySpan<char>.Empty);
             var result = new StringBuilder();
 
+            var outputNewLineX2 = outputNewLine + outputNewLine;
+
             var pos = 0;
             while (state.State != State.EndText)
             {
-                state = Parse(in state, ReadLine(s, ref pos), pos >= s.Length);
+                state = Parse(in state, ReadLine(s, ref pos), pos >= s.Length, outputNewLineX2);
                 result.Append(state.Output);
             }
 
-            return result.Replace(Environment.NewLine, outputNewLine).ToString();
+            return result.ToString();
         }
 
         public static ReadOnlySpan<char> ReadLine(string str, ref int pos)
@@ -51,23 +53,22 @@ namespace Indentional
             return null;
         }
 
-        static ParserState Parse(in ParserState state, in ReadOnlySpan<char> line, bool lastLine) => 
+        static ParserState Parse(in ParserState state, in ReadOnlySpan<char> line, bool lastLine, in ReadOnlySpan<char> outputNewLineX2) => 
             line != null
                 ? lastLine
-                    ? ParseLine(in state, line)
-                    : ParseLine(in state, line.TrimEnd())
+                    ? ParseLine(in state, line, in outputNewLineX2)
+                    : ParseLine(in state, line.TrimEnd(), in outputNewLineX2)
                 : state.Next(State.EndText);
 
-        static readonly string doubleNewLine = $"{Environment.NewLine}{Environment.NewLine}";
 
-        static ParserState ParseLine(in ParserState state, in ReadOnlySpan<char> line) =>
+        static ParserState ParseLine(in ParserState state, in ReadOnlySpan<char> line, in ReadOnlySpan<char> outputNewLine) =>
             IsLineBreak(line)
                 ? state.State switch 
                 {
                     State.BeginText => state.Next(State.BeginTextWithLineBreak),
-                    State.BeginTextWithLine => state.Next(State.Block, doubleNewLine),
+                    State.BeginTextWithLine => state.Next(State.Block, outputNewLine),
                     State.BeginTextWithLineBreak => state.Next(State.BeginTextWithLineBreak),
-                    State.Line => state.Next(State.Block, doubleNewLine),
+                    State.Line => state.Next(State.Block, outputNewLine),
                     State.Block => state.Next(State.Block),
                     _ => state.Next(State.EndText)
                 } : state.State switch
@@ -83,7 +84,7 @@ namespace Indentional
         static ParserState Indent(in ParserState state, in ReadOnlySpan<char> line, in ReadOnlySpan<char> prepend)
         {
             var indent = line.Length - line.TrimStart().Length;
-            return state.Next(State.Line, indent, string.Concat(prepend, IndentLine(indent, line)));
+            return state.Next(State.Line, indent, prepend.Length > 0 ? string.Concat(prepend, IndentLine(indent, line)) : IndentLine(indent, line));
         }
 
         static bool IsLineBreak(ReadOnlySpan<char> line) => line.Trim().Length == 0;

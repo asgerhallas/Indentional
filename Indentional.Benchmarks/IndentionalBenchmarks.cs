@@ -4,7 +4,7 @@ using BenchmarkDotNet.Jobs;
 namespace Indentional.Benchmarks
 {
     [SimpleJob(RuntimeMoniker.Net50, baseline: true)]
-    //[SimpleJob(RuntimeMoniker.NetCoreApp30)]
+    [SimpleJob(RuntimeMoniker.NetCoreApp30)]
     public class IndentionalBenchmarks
     {
 
