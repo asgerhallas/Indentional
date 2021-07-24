@@ -3,8 +3,9 @@ using BenchmarkDotNet.Jobs;
 
 namespace Indentional.Benchmarks
 {
-    [SimpleJob(RuntimeMoniker.Net50, baseline: true)]
-    [SimpleJob(RuntimeMoniker.NetCoreApp21)]
+    [SimpleJob(RuntimeMoniker.NetCoreApp21, baseline: true)]
+    [SimpleJob(RuntimeMoniker.Net50)]
+    [SimpleJob(RuntimeMoniker.Net461)]
     [HtmlExporter]
     [JsonExporterAttribute.Brief]
     public class IndentionalBenchmarks
