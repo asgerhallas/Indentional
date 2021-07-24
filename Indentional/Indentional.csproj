@@ -1,10 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFrameworks>net5.0;netstandard2.0</TargetFrameworks>
     <PackageId>Indentional</PackageId>
     <PackageProjectUrl>https://github.com/asgerhallas/Indentional</PackageProjectUrl>
     <Description>No more bleeding eyes...</Description>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="ShinySwitch" Version="1.0.75" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+  </ItemGroup>
 </Project>

@@ -13,6 +13,18 @@ namespace Indentional
 
         public static string Indent(string outputNewLine, string s)
         {
+            // No more bleeding eyes.. except for the devs
+#if NETSTANDARD2_0
+            return Standard2.IndentionalOriginal.Indent(outputNewLine, s);
+#else
+            return IndentInternal(outputNewLine, s);
+#endif
+        }
+
+#if NETSTANDARD2_0
+#else
+        private static string IndentInternal(string outputNewLine, string s)
+        {
             var state = new ParserState(State.BeginText, 0, ReadOnlySpan<char>.Empty);
             var result = new StringBuilder();
 
@@ -26,6 +38,7 @@ namespace Indentional
             }
 
             return result.ToString();
+
         }
 
         public static ReadOnlySpan<char> ReadLine(string str, ref int pos)
@@ -37,7 +50,7 @@ namespace Indentional
                 char ch = str[i];
                 if (ch == '\r' || ch == '\n')
                 {
-                    ReadOnlySpan<char> result = str[pos..i];
+                    ReadOnlySpan<char> result = str.AsSpan(pos, i-pos);
                     pos = i + 1;
                     if (ch == '\r' && pos < length && str[pos] == '\n') pos++;
                     return result;
@@ -46,7 +59,7 @@ namespace Indentional
             }
             if (i > pos)
             {
-                ReadOnlySpan<char> result = str[pos..i];
+                ReadOnlySpan<char> result = str.AsSpan(pos, i-pos);
                 pos = i;
                 return result;
             }
@@ -90,5 +103,6 @@ namespace Indentional
         static bool IsLineBreak(ReadOnlySpan<char> line) => line.Trim().Length == 0;
 
         static ReadOnlySpan<char> IndentLine(in int identation, ReadOnlySpan<char> line) => line[Math.Min(identation, line.Length)..];
+#endif
     }
 }

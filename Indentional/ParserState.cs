@@ -2,6 +2,8 @@
 
 namespace Indentional
 {
+#if NETSTANDARD2_0
+#else
     public readonly ref struct ParserState
     {
         public ParserState(State state, int identation, in ReadOnlySpan<char> output)
@@ -21,4 +23,5 @@ namespace Indentional
 
         public ParserState Next(in State state, int indentation, in ReadOnlySpan<char> value) => new ParserState(state, indentation, in value);
     }
+#endif
 }

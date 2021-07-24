@@ -4,7 +4,9 @@ using BenchmarkDotNet.Jobs;
 namespace Indentional.Benchmarks
 {
     [SimpleJob(RuntimeMoniker.Net50, baseline: true)]
-    [SimpleJob(RuntimeMoniker.NetCoreApp30)]
+    [SimpleJob(RuntimeMoniker.NetCoreApp21)]
+    [HtmlExporter]
+    [JsonExporterAttribute.Brief]
     public class IndentionalBenchmarks
     {
 
@@ -72,16 +74,10 @@ namespace Indentional.Benchmarks
         public string OriginalShort() => IndentionalOriginal._(shortString);
 
         [Benchmark]
-        public string NoShinyShort() => IndentionalNoMoreShiny._(shortString);
-
-        [Benchmark]
         public string CurrentShort() => Indentional._(shortString);
 
         [Benchmark]
         public string OriginalLong() => IndentionalOriginal._(longString);
-
-        [Benchmark]
-        public string NoShinyLong() => IndentionalNoMoreShiny._(longString);
 
         [Benchmark]
         public string CurrentLong() => Indentional._(longString);

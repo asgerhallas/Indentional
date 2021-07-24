@@ -1,9 +1,11 @@
 ﻿
-namespace Indentional.Benchmarks {
+namespace Indentional.Standard2 {
+#if NETSTANDARD2_0
     using ShinySwitch;
     using System;
     using System.IO;
     using System.Text;
+
     internal class IndentionalOriginal
     {
         public static string _(string s) => Indent(s);
@@ -63,4 +65,5 @@ namespace Indentional.Benchmarks {
 
         static string IndentLine(int identation, string line) => line.Remove(0, Math.Min(identation, line.Length));
     }
+#endif
 }
