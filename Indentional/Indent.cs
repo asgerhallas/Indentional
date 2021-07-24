@@ -38,7 +38,6 @@ namespace Indentional
             }
 
             return result.ToString();
-
         }
 
         public static ReadOnlySpan<char> ReadLine(string str, ref int pos)
@@ -75,7 +74,7 @@ namespace Indentional
 
 
         static ParserState ParseLine(in ParserState state, in ReadOnlySpan<char> line, in ReadOnlySpan<char> outputNewLine) =>
-            IsLineBreak(line)
+            IsLineBreak(in line)
                 ? state.State switch 
                 {
                     State.BeginText => state.Next(State.BeginTextWithLineBreak),
@@ -87,8 +86,8 @@ namespace Indentional
                 } : state.State switch
                 {
                     State.BeginText => state.Next(State.BeginTextWithLine, line),
-                    State.BeginTextWithLine => Indent(state, line, " "),
-                    State.BeginTextWithLineBreak => Indent(state, line, ReadOnlySpan<char>.Empty),
+                    State.BeginTextWithLine => Indent(in state, in line, " "),
+                    State.BeginTextWithLineBreak => Indent(in state, in line, ReadOnlySpan<char>.Empty),
                     State.Line => state.Next(State.Line, string.Concat(" ", IndentLine(state.Identation, line))),
                     State.Block => state.Next(State.Line, IndentLine(state.Identation, line).ToString()),
                     _ => state.Next(State.EndText)
@@ -97,12 +96,21 @@ namespace Indentional
         static ParserState Indent(in ParserState state, in ReadOnlySpan<char> line, in ReadOnlySpan<char> prepend)
         {
             var indent = line.Length - line.TrimStart().Length;
-            return state.Next(State.Line, indent, prepend.Length > 0 ? string.Concat(prepend, IndentLine(indent, line)) : IndentLine(indent, line));
+            return state.Next(State.Line, indent, prepend.Length > 0 ? string.Concat(prepend, IndentLine(indent, in line)) : IndentLine(indent, in line));
         }
 
-        static bool IsLineBreak(ReadOnlySpan<char> line) => line.Trim().Length == 0;
+        static bool EmptyOrWhiteSpace(in ReadOnlySpan<char> text)
+        {
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (!Char.IsWhiteSpace(text[i])) return false;
+            }
+            return true;
+        }
 
-        static ReadOnlySpan<char> IndentLine(in int identation, ReadOnlySpan<char> line) => line[Math.Min(identation, line.Length)..];
+        static bool IsLineBreak(in ReadOnlySpan<char> line) => EmptyOrWhiteSpace(in line);
+
+        static ReadOnlySpan<char> IndentLine(in int identation, in ReadOnlySpan<char> line) => line[Math.Min(identation, line.Length)..];
 #endif
     }
 }
