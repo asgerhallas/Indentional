@@ -6,7 +6,8 @@ namespace Indentional.Benchmarks
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<IndentionalBenchmarks>();
+            var summaryShort = BenchmarkRunner.Run<IndentionalShortString>();
+            var summaryLong = BenchmarkRunner.Run<IndentionalLongString>();
         }
     }
 }

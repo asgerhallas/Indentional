@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.ObjectPool;
+using System;
 using System.Text;
 
 namespace Indentional
@@ -8,8 +9,8 @@ namespace Indentional
         public static string _(string s) => Indent(s);
 
         public static string _(string outputNewLine, string s) => Indent(outputNewLine, s);
-        
-        public static string Indent(string s) => _(Environment.NewLine, s);
+
+        public static string Indent(string s) => Indent(Environment.NewLine, s);
 
         public static string Indent(string outputNewLine, string s)
         {
@@ -21,12 +22,11 @@ namespace Indentional
 #endif
         }
 
-#if NETSTANDARD2_0
-#else
+#if !NETSTANDARD2_0
         private static string IndentInternal(string outputNewLine, string s)
         {
             var state = new ParserState(State.BeginText, 0, ReadOnlySpan<char>.Empty);
-            var result = new StringBuilder();
+            var strBuilder = new StringBuilder(s.Length);
 
             var outputNewLineX2 = outputNewLine + outputNewLine;
 
@@ -34,10 +34,12 @@ namespace Indentional
             while (state.State != State.EndText)
             {
                 state = Parse(in state, ReadLine(s, ref pos), pos >= s.Length, outputNewLineX2);
-                result.Append(state.Output);
+                strBuilder.Append(state.Output);
             }
 
-            return result.ToString();
+            var result = strBuilder.ToString();
+            stringBuilderObjectPool.Return(strBuilder);
+            return result;
         }
 
         public static ReadOnlySpan<char> ReadLine(string str, ref int pos)
@@ -89,7 +91,7 @@ namespace Indentional
                     State.BeginTextWithLine => Indent(in state, in line, " "),
                     State.BeginTextWithLineBreak => Indent(in state, in line, ReadOnlySpan<char>.Empty),
                     State.Line => state.Next(State.Line, string.Concat(" ", IndentLine(state.Identation, line))),
-                    State.Block => state.Next(State.Line, IndentLine(state.Identation, line).ToString()),
+                    State.Block => state.Next(State.Line, IndentLine(state.Identation, line)),
                     _ => state.Next(State.EndText)
                 };
 

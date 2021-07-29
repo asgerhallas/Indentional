@@ -12,7 +12,7 @@ before_build:
 build:
   verbosity: minimal
 after_build:
-- cmd: dotnet pack Indentional\Indentional.csproj --include-symbols -p:SymbolPackageFormat=snupk /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
+- cmd: dotnet pack Indentional\Indentional.csproj --include-symbols -p:SymbolPackageFormat=snupkg /p:PackageVersion=%APPVEYOR_BUILD_VERSION%
 artifacts:
 - path: '*/**/*.nupkg'
 deploy:

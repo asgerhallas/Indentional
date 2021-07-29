@@ -3,22 +3,12 @@ using BenchmarkDotNet.Jobs;
 
 namespace Indentional.Benchmarks
 {
+    [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.NetCoreApp21, baseline: true)]
     [SimpleJob(RuntimeMoniker.Net50)]
     [SimpleJob(RuntimeMoniker.Net461)]
-    [HtmlExporter]
-    [JsonExporterAttribute.Brief]
-    public class IndentionalBenchmarks
+    public class IndentionalLongString
     {
-
-        private readonly string shortString =
-                @"
-                You tried to do something tricky, but something was not true twice in i row.
-                It might be better to do this:
-
-                    DoDoingDone(checkForSomethingTrue: false);
-                
-                Don't ya think?";
 
         private readonly string longString =
 
@@ -66,18 +56,7 @@ namespace Indentional.Benchmarks
 
                     Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Morbi eros dui, pretium sit amet sem ac, efficitur suscipit nunc. Quisque sit amet tincidunt massa, sed blandit leo. Curabitur a malesuada arcu, sed vulputate mi. Morbi lacinia, tortor ac malesuada congue, sem massa efficitur leo, ac semper orci ex vel justo. Etiam eget lectus quis quam dignissim pellentesque sed in ligula. Donec quis sollicitudin diam. Pellentesque vitae leo luctus, ornare nulla at, elementum elit. Mauris rutrum, nisl non aliquam elementum, quam quam vestibulum lectus, at blandit ante neque eu libero. Praesent nec diam eleifend, fermentum sapien at, interdum nibh. Aliquam purus nulla, viverra vel gravida quis, congue sed arcu. Nunc sed sem ante. Suspendisse non semper lacus, non rutrum nisi. Donec bibendum felis vitae magna feugiat semper. Proin lacinia arcu vel tristique elementum. Pellentesque ullamcorper commodo dolor, ac posuere nulla bibendum at. ";
 
-        public IndentionalBenchmarks()
-        {
-
-        }
-
         [Benchmark(Baseline = true)]
-        public string OriginalShort() => IndentionalOriginal._(shortString);
-
-        [Benchmark]
-        public string CurrentShort() => Indentional._(shortString);
-
-        [Benchmark]
         public string OriginalLong() => IndentionalOriginal._(longString);
 
         [Benchmark]
