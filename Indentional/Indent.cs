@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.ObjectPool;
-using System;
+﻿using System;
 using System.Text;
 
 namespace Indentional
@@ -38,7 +37,6 @@ namespace Indentional
             }
 
             var result = strBuilder.ToString();
-            stringBuilderObjectPool.Return(strBuilder);
             return result;
         }
 
