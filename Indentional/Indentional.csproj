@@ -5,10 +5,11 @@
     <PackageId>Indentional</PackageId>
     <PackageProjectUrl>https://github.com/asgerhallas/Indentional</PackageProjectUrl>
     <Description>No more bleeding eyes...</Description>
+    <LangVersion>9</LangVersion>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="ShinySwitch" Version="1.0.75" />
+    <PackageReference Include="ShinySwitch" Version="1.0.76" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
   </ItemGroup>

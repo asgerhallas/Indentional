@@ -20,29 +20,31 @@ namespace Indentional.Standard2 {
             var input = new StringReader(s);
             var result = new StringBuilder();
 
+            var outputNewLineX2 = outputNewLine + outputNewLine;
+
             while (state.State != State.EndText)
             {
-                state = Parse(state, input.ReadLine(), input.Peek() == -1);
+                state = Parse(state, input.ReadLine(), input.Peek() == -1, outputNewLineX2);
                 result.Append(state.Output);
             }
 
-            return result.Replace(Environment.NewLine, outputNewLine).ToString();
+            return result.ToString();
         }
 
-        static OriginalParserState Parse(OriginalParserState state, string line, bool lastLine) =>
+        static OriginalParserState Parse(OriginalParserState state, string line, bool lastLine, string outputNewLine) =>
             line != null
                 ? lastLine
-                    ? ParseLine(state, line)
-                    : ParseLine(state, line.TrimEnd())
+                    ? ParseLine(state, line, outputNewLine)
+                    : ParseLine(state, line.TrimEnd(), outputNewLine)
                 : state.Next(State.EndText);
 
-        static OriginalParserState ParseLine(OriginalParserState state, string line) =>
+        static OriginalParserState ParseLine(OriginalParserState state, string line, string outputNewLine) =>
             IsLineBreak(line)
                 ? Switch<OriginalParserState>.On(state.State)
                     .Match(State.BeginText, _ => state.Next(State.BeginTextWithLineBreak))
-                    .Match(State.BeginTextWithLine, _ => state.Next(State.Block, $"{Environment.NewLine}{Environment.NewLine}"))
+                    .Match(State.BeginTextWithLine, _ => state.Next(State.Block, outputNewLine))
                     .Match(State.BeginTextWithLineBreak, _ => state.Next(State.BeginTextWithLineBreak))
-                    .Match(State.Line, _ => state.Next(State.Block, $"{Environment.NewLine}{Environment.NewLine}"))
+                    .Match(State.Line, _ => state.Next(State.Block, outputNewLine))
                     .Match(State.Block, _ => state.Next(State.Block))
                     .Else(() => state.Next(State.EndText))
                 : Switch<OriginalParserState>.On(state.State)
