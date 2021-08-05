@@ -1,6 +1,6 @@
 ﻿namespace Indentional
 {
-    public enum State
+    public enum State : byte
     {
         BeginText,
         BeginTextWithLine,

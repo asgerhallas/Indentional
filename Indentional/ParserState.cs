@@ -1,8 +1,12 @@
-﻿namespace Indentional
+﻿using System;
+
+namespace Indentional
 {
-    public class ParserState
+#if NETSTANDARD2_0
+#else
+    public readonly ref struct ParserState
     {
-        public ParserState(State state, int identation, string output)
+        public ParserState(State state, int identation, in ReadOnlySpan<char> output)
         {
             State = state;
             Identation = identation;
@@ -11,12 +15,13 @@
 
         public State State { get; }
         public int Identation { get; }
-        public string Output { get; }
+        public ReadOnlySpan<char> Output { get; }
 
-        public ParserState Next(State state) => new ParserState(state, Identation, null);
+        public ParserState Next(in State state) => new ParserState(state, Identation, ReadOnlySpan<char>.Empty);
 
-        public ParserState Next(State state, string value) => new ParserState(state, Identation, value);
+        public ParserState Next(in State state, in ReadOnlySpan<char> value) => new ParserState(state, Identation, in value);
 
-        public ParserState Next(State state, int indentation, string value) => new ParserState(state, indentation, value);
+        public ParserState Next(in State state, int indentation, in ReadOnlySpan<char> value) => new ParserState(state, indentation, in value);
     }
+#endif
 }
