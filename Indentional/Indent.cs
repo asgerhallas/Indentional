@@ -7,11 +7,7 @@ namespace Indentional
 {
     public static class Indentional
     {
-        public static string _(string s) => Indent(s);
-
-        public static string _(string outputNewLine, string s) => Indent(outputNewLine, s);
-        
-        public static string Indent(string s) => _(Environment.NewLine, s);
+        public static string Indent(string s) => Indent(Environment.NewLine, s);
 
         public static string Indent(string outputNewLine, string s)
         {
