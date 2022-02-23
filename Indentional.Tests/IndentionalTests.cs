@@ -1,5 +1,5 @@
 using Xunit;
-using static Indentional.Parser;
+using static Indentional.Text;
 
 namespace Indentional.Tests
 {
