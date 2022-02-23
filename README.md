@@ -72,10 +72,14 @@ No more bleeding eyes. Except when using preprocessor directives. But that's ano
 
 ## What does it actually do?
 
-- Given a string, it will "measure" the indentation of the first indented line and use this as a baseline 
+- Given a string, Indentional will "measure" the indentation of the first indented line and use this as a baseline 
 for the rest of the text. In this way you can use the same indentation for the entire text without
 getting your spaces or tabs mixed into the resulting string.
 
-- It also handles newlines in the same way as markdown. One newline will not show up in the resulting 
+- Indentional handles newlines in the same way as markdown. One newline will not show up in the resulting 
 string, but two will. So in your code, you can break the text wherever you want, but the result message 
 will still look great (with no unintended line breaks) in logs, alerts and the like.
+
+- Indentional removes trailing spaces on each line, except on the last line where they are clearly visible. 
+Also removes trailing line breaks as it enables good looking identation, when using the extension methods.
+ 
