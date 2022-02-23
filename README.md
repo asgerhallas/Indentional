@@ -45,6 +45,16 @@ public void DoDoingDone()
 }
 ```
 
+This will output the following text: 
+
+```
+You tried to do something tricky, but something was not true twice in i row. It might be better to do this:
+                    
+    DoDoingDone(checkForSomethingTrue: false);
+                
+Don't ya think?
+```
+
 It can also be used as an extension method:
 
 ```C#
