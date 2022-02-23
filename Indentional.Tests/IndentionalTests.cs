@@ -1,5 +1,5 @@
 using Xunit;
-using static Indentional.Indentional;
+using static Indentional.Parser;
 
 namespace Indentional.Tests
 {
@@ -97,6 +97,17 @@ namespace Indentional.Tests
         }
 
         [Fact]
+        public void TrimsEnds_TrailingLineBreak()
+        {
+            var actual = Indent(@"
+                my first line    
+                my second line 
+            ");
+
+            Assert.Equal("my first line my second line", actual);
+        }
+
+        [Fact]
         public void TestReadme()
         {
             var actual = Indent(@"
@@ -137,6 +148,20 @@ namespace Indentional.Tests
             var actual = Indent("Der bør ikke oprettes energimærkningsrapporter, der indeholder mere end ");
 
             Assert.Equal("Der bør ikke oprettes energimærkningsrapporter, der indeholder mere end ", actual);
+        }
+
+        [Fact]
+        public void CanAlsoBeUsedAsExtensionMethod()
+        {
+            var actual = @"
+                my first line
+
+                    my second line
+
+                my third line
+            ".Indent();
+
+            Assert.Equal("my first line\r\n\r\n    my second line\r\n\r\nmy third line", actual);
         }
     }
 }

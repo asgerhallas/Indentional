@@ -5,7 +5,7 @@ using ShinySwitch;
 
 namespace Indentional
 {
-    public static class Indentional
+    public static class Text
     {
         public static string Indent(string s) => Indent(Environment.NewLine, s);
 
@@ -26,18 +26,18 @@ namespace Indentional
 
         static ParserState Parse(ParserState state, string line, bool lastLine) => 
             line != null 
-                ? lastLine
-                    ? ParseLine(state, line)
-                    : ParseLine(state, line.TrimEnd())
+                ? ParseLine(state, lastLine ? line : line.TrimEnd(), lastLine)
                 : state.Next(State.EndText);
 
-        static ParserState ParseLine(ParserState state, string line) =>
+        static ParserState ParseLine(ParserState state, string line, bool lastLine) =>
             IsLineBreak(line)
                 ? Switch<ParserState>.On(state.State)
                     .Match(State.BeginText, _ => state.Next(State.BeginTextWithLineBreak))
                     .Match(State.BeginTextWithLine, _ => state.Next(State.Block, $"{Environment.NewLine}{Environment.NewLine}"))
                     .Match(State.BeginTextWithLineBreak, _ => state.Next(State.BeginTextWithLineBreak))
-                    .Match(State.Line, _ => state.Next(State.Block, $"{Environment.NewLine}{Environment.NewLine}"))
+                    .Match(State.Line, _ => lastLine
+                        ? state.Next(State.EndText)
+                        : state.Next(State.Block, $"{Environment.NewLine}{Environment.NewLine}"))
                     .Match(State.Block, _ => state.Next(State.Block))
                     .Else(() => state.Next(State.EndText))
                 : Switch<ParserState>.On(state.State)
